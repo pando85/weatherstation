@@ -8,6 +8,8 @@
         - [Types](#types)
             - [DHT22](#dht22)
             - [NTPClient](#ntpclient)
+    - [Development](#development)
+        - [Requisites](#requisites)
     - [TODO](#todo)
     - [Tests](#tests)
 
@@ -29,11 +31,9 @@ In order to upload firmware, select:
 
 ### Dependencies
 
-- DHT Adafruit library
-- Adafruit Sensor common library
-- Adafruit mqtt library
-- Adafruit sleepydog library
-- Adafruit Fona library
+```bash
+./buildroot/bin/install_dependencies
+```
 
 ### Types
 
@@ -50,6 +50,13 @@ In order to upload firmware, select:
 | **Name** | **Type** | **Unit** |
 |----------|----------|----------|
 | timestamp | usigned long | s |
+
+## Development
+
+### Requisites
+
+- arduino
+- jq
 
 ## TODO
 

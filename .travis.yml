@@ -1,0 +1,37 @@
+dist: trusty
+sudo: true
+  #
+language: c
+  #
+before_install:
+  #
+  # Fetch the tag information for the current branch
+  - git fetch origin --tags
+  #
+  # Publish the buildroot script folder
+  - chmod +x ${TRAVIS_BUILD_DIR}/buildroot/bin/*
+  - export PATH=${TRAVIS_BUILD_DIR}/buildroot/bin/:${PATH}
+  #
+  # Start fb X server
+#  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
+#  - sleep 3
+#  - export DISPLAY=:1.0
+  #
+install:
+  #
+  # Install arduino 1.8.5
+  - wget http://downloads-02.arduino.cc/arduino-1.8.5-linux64.tar.xz
+  - tar xf arduino-1.8.5-linux64.tar.xz
+  - sudo mv arduino-1.8.5 /usr/local/share/arduino
+  - ln -s /usr/local/share/arduino/arduino ${TRAVIS_BUILD_DIR}/buildroot/bin/arduino
+  #
+  # Install external libraries
+  - install_dependencies
+  #
+before_script:
+  #
+  # Change current working directory to the build dir
+  - cd ${TRAVIS_BUILD_DIR}
+  #
+script:
+  - build_weather-station

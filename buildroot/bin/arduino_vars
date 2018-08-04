@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+export BOARD=$(jq -r '.board' .vscode/arduino.json)
+OUTPUT_OPT="--pref build.path=$(pwd)/$(jq -r '.output' .vscode/arduino.json)"
+export CONFIGURATION=$OUTPUT_OPT
+export SKETCH=$(jq -r '.sketch' .vscode/arduino.json)
+export PORT=$(jq -r '.port' .vscode/arduino.json)

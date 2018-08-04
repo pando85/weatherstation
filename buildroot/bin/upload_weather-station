@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source arduino_vars
+
+arduino --upload --board $BOARD --port $PORT $CONFIGURATION $SKETCH
