@@ -20,6 +20,7 @@ In order to upload firmware, select:
 ### gpio
 
 | BOARD | CHIP | SOFTWARE |
+|-------|------|----------|
 | D0 | IO016 | 16 |
 | D1 | IO05 | 5 |
 | D2 | IO04 | 4 |
@@ -39,6 +40,7 @@ In order to upload firmware, select:
 #### DHT22
 
 | **Name** | **Type** | **Unit** |
+|----------|----------|----------|
 | humidity | float | % |
 | temperature | float | *C |
 | heat index | float | *C |
@@ -46,6 +48,7 @@ In order to upload firmware, select:
 #### NTPClient
 
 | **Name** | **Type** | **Unit** |
+|----------|----------|----------|
 | timestamp | usigned long | s |
 
 ## TODO
