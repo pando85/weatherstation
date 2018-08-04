@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "~/Arduino/libraries/**",
+                "/usr/share/arduino/lib/**",
+                "~/.arduino15/packages/esp8266/tools/**",
+                "~/.arduino15/packages/esp8266/hardware/esp8266/2.4.2/**",
+                "${workspaceFolder}/WeatherStation"
+            ],
+            "intelliSenseMode": "clang-x64",
+            "compilerPath": "/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
