@@ -24,7 +24,7 @@ install:
   - tar xf arduino-1.8.5-linux64.tar.xz
   - sudo mv arduino-1.8.5 /usr/local/share/arduino
   - ln -s /usr/local/share/arduino/arduino ${TRAVIS_BUILD_DIR}/buildroot/bin/arduino
-  #
+  - arduino --install-boards "esp8266:esp8266"
   # Install external libraries
   - install_dependencies
   #

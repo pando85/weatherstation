@@ -3,5 +3,4 @@ set -e
 
 source arduino_vars
 
-
 arduino --verify --board $BOARD $CONFIGURATION $SKETCH
