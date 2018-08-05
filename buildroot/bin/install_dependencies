@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-if [ -z ${TRAVIS_BUILD_DIR+x} ]; then
-  export ARDUINO_LIB_PATH=$HOME/Arduino/libraries;
-else
-  export ARDUINO_LIB_PATH=/usr/local/share/arduino/libraries;
-fi
-
+ARDUINO_LIB_PATH=$HOME/Arduino/libraries;
 TMP_DIR=$(mktemp -d)
 
 for url in $(cat dependencies.txt); do
