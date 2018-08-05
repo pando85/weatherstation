@@ -18,6 +18,8 @@ install:
   - arduino --install-boards "esp8266:esp8266"
   # Install external libraries
   - install_dependencies
+  - arduino --board esp8266:esp8266:nodemcuv2 --save-prefs
+  - arduino --pref "compiler.warning_level=all" --save-prefs
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
 script:
