@@ -11,8 +11,8 @@ install:
   - wget http://downloads-02.arduino.cc/arduino-1.8.5-linux64.tar.xz
   - tar xf arduino-1.8.5-linux64.tar.xz
   - mv arduino-1.8.5 $HOME/arduino
-  - ln -s $HOME/arduino ${TRAVIS_BUILD_DIR}/buildroot/bin/arduino
-
+  - ln -s $HOME/arduino/arduino ${TRAVIS_BUILD_DIR}/buildroot/bin/arduino
+  # Install esp8266
   - git clone https://github.com/bblanchon/ArduinoJson $HOME/Arduino/libraries/ArduinoJson
   - arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs
   - arduino --install-boards "esp8266:esp8266"
