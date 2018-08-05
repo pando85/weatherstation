@@ -8,9 +8,10 @@ install:
   - sudo apt-get update
   - sudo apt-get install -y libc6-i386
   # Install arduino 1.8.5
-  - wget http://downloads-02.arduino.cc/arduino-1.8.5-linux64.tar.xz
-  - tar xf arduino-1.8.5-linux64.tar.xz
-  - mv arduino-1.8.5 $HOME/arduino
+  - wget https://downloads.arduino.cc/ide_beta/arduino-1.9.0-beta-linux64.tar.xz
+  - tar xf arduino-1.9.0-beta-linux64.tar.xz
+  - rm -f arduino-1.9.0-beta-linux64.tar.xz
+  - mv arduino-* $HOME/arduino
   - ln -s $HOME/arduino/arduino ${TRAVIS_BUILD_DIR}/buildroot/bin/arduino
   # Install esp8266
   - git clone https://github.com/bblanchon/ArduinoJson $HOME/Arduino/libraries/ArduinoJson
