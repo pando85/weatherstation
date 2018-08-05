@@ -1,27 +1,8 @@
-sudo: true
 language: c
+sudo: false
 before_install:
-  - chmod +x ${TRAVIS_BUILD_DIR}/buildroot/bin/*
-  - export PATH=${TRAVIS_BUILD_DIR}/buildroot/bin/:${PATH}
+  - source <(curl -SLs https://raw.githubusercontent.com/adafruit/travis-ci-arduino/master/install.sh)
 install:
-  # Remove unwanted warnings
-  - sudo apt-get update
-  - sudo apt-get install -y libc6-i386
-  # Install arduino 1.8.5
-  - wget https://downloads.arduino.cc/ide_beta/arduino-1.9.0-beta-linux64.tar.xz
-  - tar xf arduino-1.9.0-beta-linux64.tar.xz
-  - rm -f arduino-1.9.0-beta-linux64.tar.xz
-  - mv arduino-* $HOME/arduino
-  - ln -s $HOME/arduino/arduino ${TRAVIS_BUILD_DIR}/buildroot/bin/arduino
-  # Install esp8266
-  - git clone https://github.com/bblanchon/ArduinoJson $HOME/Arduino/libraries/ArduinoJson
-  - arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs
-  - arduino --install-boards "esp8266:esp8266"
-  # Install external libraries
   - install_dependencies
-  - arduino --board esp8266:esp8266:nodemcuv2 --save-prefs
-  - arduino --pref "compiler.warning_level=all" --save-prefs
-before_script:
-  - cd ${TRAVIS_BUILD_DIR}
 script:
-  - build_weather-station
+  - build_platform esp8266
