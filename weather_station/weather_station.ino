@@ -1,24 +1,14 @@
 
-#include <Adafruit_MQTT.h>
-#include <Adafruit_MQTT_Client.h>
 #include <DHT.h>
-#include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
 
-#include "Configuration.h"
+#include "configuration.h"
+#include "wifi_client.h"
+#include "mqtt.h"
 
-// Create an ESP8266 WiFiClient class to connect to the MQTT server.
-WiFiClient client;
-// or... use WiFiFlientSecure for SSL
-//WiFiClientSecure client;
-
-// Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
-Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
-
-Adafruit_MQTT_Publish weather_station_indoor_1 = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/weather-station/indoor/1");
 
 
 WiFiUDP ntpUDP;
@@ -130,6 +120,7 @@ void loop() {
 
   Serial.println("\nSending weather-station values");
   if (! weather_station_indoor_1.publish(h)) {
+    //TODO: store in buffer and send in next try
     Serial.println(F("Failed"));
   } else {
     Serial.println(F("OK!"));
@@ -164,4 +155,3 @@ void MQTT_connect() {
   }
   Serial.println("MQTT Connected!");
 }
-

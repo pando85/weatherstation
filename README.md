@@ -1,5 +1,5 @@
 # Weather Station
-[![Build Status](https://travis-ci.org/pando85/weatherstation.svg?branch=master)](https://travis-ci.org/pando85/weatherstation)
+[![Build Status](https://travis-ci.org/pando85/weather_station.svg?branch=master)](https://travis-ci.org/pando85/weather_station)
 - [Weather Station](#weather-station)
     - [Hardware](#hardware)
         - [gpio](#gpio)
