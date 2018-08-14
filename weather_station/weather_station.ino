@@ -1,37 +1,27 @@
 
-#include <DHT.h>
 #include <ESP8266HTTPClient.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
 
 #include "configuration.h"
-#include "wifi_client.h"
 #include "mqtt.h"
+#include "temperature_and_humidity_sensor.h"
+#include "wifi_client.h"
 
 
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600, 60000);
 
-DHT dht(DHT_OUT_PIN, DHTTYPE);
-
-
-void typeof(String a){ Serial.print("\tit is a String");}
-void typeof(int a)   { Serial.print("\tit is a int");}
-void typeof(unsigned long a)   { Serial.print("\tit is a unsigned long");}
-void typeof(float a)   { Serial.print("\tit is a float");}
-void typeof(char* a) { Serial.print("\tit is a char*");}
-
 void MQTT_connect(void);
+
 
 void setup() {
   Serial.begin(9600);
   delay(10);
 
-  pinMode(DHT_VCC_PIN, OUTPUT);
-  digitalWrite(DHT_VCC_PIN, HIGH);
-  dht.begin();
+  th_sensor::initialice_sensor();
 
   // Connect to WiFi network
   Serial.println();
@@ -86,27 +76,24 @@ void loop() {
   MQTT_connect();
 
   // Reading temperature or humidity takes about 250 milliseconds!
-  float h = dht.readHumidity();
-  float t = dht.readTemperature();
+  float h = th_sensor::dht.readHumidity();
+  float t = th_sensor::dht.readTemperature();
 
   if (isnan(h) || isnan(t)) {
     Serial.println("Failed to read from DHT sensor!");
     return;
   }
 
-  float hic = dht.computeHeatIndex(t, h, false);
+  float hic = th_sensor::dht.computeHeatIndex(t, h, false);
 
   Serial.print("Humidity: ");
   Serial.print(h);
-  typeof(h);
   Serial.print(" %\t");
   Serial.print("Temperature: ");
   Serial.print(t);
-  typeof(t);
   Serial.print(" *C\t");
   Serial.print("Heat index: ");
   Serial.print(hic);
-  typeof(hic);
   Serial.println(" *C");
 
   timeClient.update();
@@ -115,7 +102,6 @@ void loop() {
   Serial.print("timestamp: ");
   unsigned long timestamp = timeClient.getEpochTime();
   Serial.println(timestamp);
-  typeof(timestamp);
   Serial.println();
 
   const char* topic = "/weather-station/indoor/1";
