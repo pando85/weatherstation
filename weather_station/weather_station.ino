@@ -118,8 +118,11 @@ void loop() {
   typeof(timestamp);
   Serial.println();
 
+  const char* topic = "/weather-station/indoor/1";
+  Adafruit_MQTT_Publish* weather_station_indoor_1;
+  weather_station_indoor_1 = get_mqtt_publisher(topic);
   Serial.println("\nSending weather-station values");
-  if (! weather_station_indoor_1.publish(h)) {
+  if (! weather_station_indoor_1->publish(h)) {
     //TODO: store in buffer and send in next try
     Serial.println(F("Failed"));
   } else {

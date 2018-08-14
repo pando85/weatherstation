@@ -9,6 +9,7 @@
 #include "wifi_client.h"
 
 extern Adafruit_MQTT_Client mqtt;
-extern Adafruit_MQTT_Publish weather_station_indoor_1;
+
+Adafruit_MQTT_Publish* get_mqtt_publisher(const char* topic);
 
 #endif // MQTT_H
