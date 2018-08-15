@@ -11,5 +11,6 @@
 extern Adafruit_MQTT_Client mqtt;
 
 Adafruit_MQTT_Publish* get_mqtt_publisher(const char* topic);
+void mqtt_connect(void);
 
 #endif // MQTT_H
