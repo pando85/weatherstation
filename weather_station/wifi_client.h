@@ -4,6 +4,14 @@
 
 #include <ESP8266WiFi.h>
 
-extern WiFiClient client;
+#include "configuration.h"
 
+namespace wifi
+{
+
+  extern WiFiClient client;
+
+  void connect(void);
+
+} // wifi
 #endif // WIFI_CLIENT_H

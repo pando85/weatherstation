@@ -4,18 +4,18 @@
 namespace th_sensor
 {
 
-extern DHT dht(DHT_OUT_PIN, DHTTYPE);
+  extern DHT dht(DHT_OUT_PIN, DHTTYPE);
 
-extern void initialice_sensor(void){
-    pinMode(DHT_VCC_PIN, OUTPUT);
-    _power_on();
+  extern void initialice_sensor(void){
+      pinMode(DHT_VCC_PIN, OUTPUT);
+      _power_on();
 
-    dht.begin();
-}
+      dht.begin();
+  }
 
-void _power_on(void){
-    digitalWrite(DHT_VCC_PIN, HIGH);
+  void _power_on(void){
+      digitalWrite(DHT_VCC_PIN, HIGH);
 
-}
+  }
 
 } // th_sensor
