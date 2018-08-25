@@ -1,12 +1,17 @@
 
 #include "mqtt.h"
 
+#define QOS 1
+#define IS_CONNECTED 0
+
 extern Adafruit_MQTT_Client mqtt(&wifi::client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
 
 
 Adafruit_MQTT_Publish* get_mqtt_publisher(const char* topic){
-    Adafruit_MQTT_Publish* weather_station_indoor_1 = new Adafruit_MQTT_Publish(&mqtt, topic, 1);
-    return weather_station_indoor_1;
+    Serial.print("Topic publisher: ");
+    Serial.println(topic);
+    Adafruit_MQTT_Publish* publisher = new Adafruit_MQTT_Publish(&mqtt, topic, QOS);
+    return publisher;
 }
 
 void mqtt_connect(void) {
@@ -20,7 +25,7 @@ void mqtt_connect(void) {
   Serial.print("Connecting to MQTT... ");
 
   uint8_t retries = 3;
-  while ((ret = mqtt.connect()) != 0) { // connect will return 0 for connected
+  while ((ret = mqtt.connect()) != IS_CONNECTED) {
        Serial.println(mqtt.connectErrorString(ret));
        Serial.println("Retrying MQTT connection in 5 seconds...");
        mqtt.disconnect();
