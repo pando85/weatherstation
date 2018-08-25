@@ -15,12 +15,17 @@ typedef union{
     float value;
   }data;
 
-  uint8_t raw[sizeof(data)];                    // For publishing
-} meassure_packet;
+  uint8_t raw[sizeof(data)];
+} _meassure_packet;
 
-meassure_packet humidity_queue[QUEUES_SIZE];
-meassure_packet temperature_queue[QUEUES_SIZE];
-int queue_index = 0;
+struct buffer{
+  const char* topic;
+  int queue_index = 0;
+  _meassure_packet meassure_packet[QUEUES_SIZE];
+};
+
+struct buffer humidity_buffer;
+struct buffer temperature_buffer;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600, 60000);
@@ -69,13 +74,12 @@ void loop() {
 
   unsigned long timestamp = timeClient.getEpochTime();
 
-  humidity_queue[queue_index].data.timestamp = timestamp;
-  temperature_queue[queue_index].data.timestamp = timestamp;
+  humidity_buffer.meassure_packet[humidity_buffer.queue_index].data.timestamp = timestamp;
+  humidity_buffer.meassure_packet[humidity_buffer.queue_index].data.value = th_sensor::dht.readHumidity();
+  temperature_buffer.meassure_packet[temperature_buffer.queue_index].data.timestamp = timestamp;
+  temperature_buffer.meassure_packet[temperature_buffer.queue_index].data.value = th_sensor::dht.readTemperature();
 
-  humidity_queue[queue_index].data.value = th_sensor::dht.readHumidity();
-  temperature_queue[queue_index].data.value = th_sensor::dht.readTemperature();
-
-  if (isnan(humidity_queue[queue_index].data.value) || isnan(temperature_queue[queue_index].data.value)) {
+  if (isnan(humidity_buffer.meassure_packet[humidity_buffer.queue_index].data.value) || isnan(temperature_buffer.meassure_packet[temperature_buffer.queue_index].data.value)) {
     Serial.println("Failed to read from DHT sensor!");
     return;
   }
@@ -83,21 +87,24 @@ void loop() {
   //float hic = th_sensor::dht.computeHeatIndex(t, h, false);
 
   Serial.print("Humidity: ");
-  Serial.print(humidity_queue[queue_index].data.value);
+  Serial.print(humidity_buffer.meassure_packet[humidity_buffer.queue_index].data.value);
   Serial.print(" %\t");
   Serial.print("Temperature: ");
-  Serial.print(temperature_queue[queue_index].data.value);
+  Serial.print(temperature_buffer.meassure_packet[temperature_buffer.queue_index].data.value);
   Serial.print(" *C\t");
 
   Serial.print("timestamp: ");
-  Serial.println(temperature_queue[queue_index].data.timestamp);
+  Serial.println(temperature_buffer.meassure_packet[temperature_buffer.queue_index].data.timestamp);
   Serial.println();
 
-  const char* topic = "/weather-station/indoor/1";
+  humidity_buffer.topic = "/weather-station/indoor/1/humidity";
   Adafruit_MQTT_Publish* weather_station_indoor_1;
-  weather_station_indoor_1 = get_mqtt_publisher(topic);
+  weather_station_indoor_1 = get_mqtt_publisher(humidity_buffer.topic);
   Serial.println("\nSending weather-station values");
-  if (! weather_station_indoor_1->publish(humidity_queue[queue_index].raw, sizeof(meassure_packet))) {
+  if (
+    ! weather_station_indoor_1->publish(
+      temperature_buffer.meassure_packet[temperature_buffer.queue_index].raw,
+      sizeof(_meassure_packet))) {
     //TODO: store in buffer and send in next try
     Serial.println(F("Failed"));
   } else {
