@@ -10,6 +10,7 @@
 #define WIFI_SSID "SSID"
 #define WIFI_PASSWORD "super_secret_password"
 
+#define QUEUES_SIZE 10
 
 #define AIO_SERVER "example.com"
 #define AIO_SERVERPORT 1883
