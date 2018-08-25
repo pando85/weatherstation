@@ -98,6 +98,9 @@ void loop() {
         temperature_buffer.queue_index = 0;
       }
       is_success = false;
+      Serial.print("Buffer index: ");
+      Serial.println(temperature_buffer.queue_index);
+
       Serial.println(F("Failed to send!"));
     } else {
       temperature_buffer.data[temperature_buffer.queue_index].value = NULL;
