@@ -4,3 +4,4 @@ https://github.com/adafruit/Adafruit_MQTT_Library.git
 https://github.com/adafruit/Adafruit_SleepyDog.git
 https://github.com/adafruit/Adafruit_FONA.git
 https://github.com/arduino-libraries/NTPClient.git
+https://github.com/ThingPulse/esp8266-oled-ssd1306.git

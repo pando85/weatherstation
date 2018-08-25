@@ -1,5 +1,4 @@
 
-#include <ESP8266HTTPClient.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
@@ -9,7 +8,9 @@
 #include "temperature_and_humidity_sensor.h"
 #include "wifi_client.h"
 
+#include "SSD1306.h"
 
+SSD1306 display(0x3c, D3, D5);
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600, 60000);
@@ -25,31 +26,10 @@ void setup() {
   wifi::connect();
   timeClient.begin();
 
-
- // Check connection
-  HTTPClient http;
-  Serial.print("[HTTP] begin...\n");
-  http.begin("http://grigri.grigri/");
-  Serial.print("[HTTP] GET...\n");
-
-  int httpCode = http.GET();
-
-  // httpCode will be negative on error
-  if (httpCode > 0) {
-    // HTTP header has been send and Server response header has been handled
-    Serial.printf("[HTTP] GET... code: %d\n", httpCode);
-    // file found at server
-    if (httpCode == HTTP_CODE_OK) {
-      String payload = http.getString();
-      Serial.println(payload);
-    }
-  } else {
-    Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
-  }
-
-  http.end();
-
-
+  display.init();
+  display.flipScreenVertically();
+  display.setFont(ArialMT_Plain_16);
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
 }
 
 void loop() {
@@ -60,11 +40,18 @@ void loop() {
   float t = th_sensor::dht.readTemperature();
 
   if (isnan(h) || isnan(t)) {
-    Serial.println("Failed to read from DHT sensor!");
+    display.clear();
+    display.drawString(5,0, "Failed DHT");
     return;
   }
 
   float hic = th_sensor::dht.computeHeatIndex(t, h, false);
+
+  display.clear();
+  display.drawString(0, 0, "Humidity: " + String(h) + "%\t");
+  display.drawString(0, 16, "Temp: " + String(t) + "C");
+  display.drawString(0, 32, "Timestamp: " + timeClient.getEpochTime());
+
 
   Serial.print("Humidity: ");
   Serial.print(h);
