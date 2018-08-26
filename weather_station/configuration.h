@@ -12,6 +12,10 @@
 
 #define QUEUES_SIZE 10
 
+#define MQTT_STATION_TOPIC "/weather-station/indoor/1"
+#define MQTT_TEMPERATURE_TOPIC MQTT_STATION_TOPIC "/temperature"
+#define MQTT_HUMIDITY_TOPIC MQTT_STATION_TOPIC "/humidity"
+
 #define AIO_SERVER "example.com"
 #define AIO_SERVERPORT 1883
 #define AIO_USERNAME "user1234"
