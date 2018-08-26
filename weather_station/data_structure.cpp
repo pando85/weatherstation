@@ -1,6 +1,4 @@
 
-#include <ArduinoJson.h>
-
 #include "data_structure.h"
 
 char* get_json_from_data(struct _data data){

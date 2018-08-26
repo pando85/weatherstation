@@ -22,8 +22,7 @@ _th_sensor_data th_sensor_data = {
   }
 };
 
-Adafruit_MQTT_Publish* weather_station_indoor_1_humidity;
-Adafruit_MQTT_Publish* weather_station_indoor_1_temperature;
+mqtt_th_sensor_publisher publisher;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600, 60000);
@@ -37,8 +36,8 @@ void setup() {
   wifi::connect();
   timeClient.begin();
 
-  weather_station_indoor_1_humidity = get_mqtt_publisher(th_sensor_data.humidity.topic);
-  weather_station_indoor_1_temperature = get_mqtt_publisher(th_sensor_data.temperature.topic);
+  publisher.temperature = get_mqtt_publisher(th_sensor_data.temperature.topic);
+  publisher.humidity = get_mqtt_publisher(th_sensor_data.humidity.topic);
 }
 
 void loop() {
@@ -77,7 +76,7 @@ void loop() {
     char data_json[40];
     strcpy(data_json, get_json_from_data(th_sensor_data.temperature.data[th_sensor_data.temperature.queue_index]));
 
-    if (! weather_station_indoor_1_temperature->publish(data_json)) {
+    if (! publisher.temperature->publish(data_json)) {
       th_sensor_data.temperature.queue_index += 1;
       if (th_sensor_data.temperature.queue_index >= QUEUES_SIZE){
         th_sensor_data.temperature.queue_index = 0;
