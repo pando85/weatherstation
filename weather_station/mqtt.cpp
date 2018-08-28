@@ -37,3 +37,33 @@ void mqtt_connect(void) {
   }
   Serial.println("MQTT Connected!");
 }
+
+
+extern void publish_all(_th_sensor_data* th_sensor_data, mqtt_th_sensor_publisher* th_sensor_publisher){
+  publish_data(&(th_sensor_data->temperature), th_sensor_publisher->temperature);
+  publish_data(&(th_sensor_data->humidity), th_sensor_publisher->humidity);
+}
+
+
+void publish_data(buffer* buffer, Adafruit_MQTT_Publish* publisher){
+  bool is_success = true;
+  while (is_success == true && buffer->data[buffer->queue_index].value != NULL){
+    char data_json[40];
+    strcpy(data_json, get_json_from_data(buffer->data[buffer->queue_index]));
+
+    if (! publisher->publish(data_json)) {
+      buffer->queue_index += 1;
+      if (buffer->queue_index >= QUEUES_SIZE){
+        buffer->queue_index = 0;
+      }
+      is_success = false;
+      Serial.print("Buffer index: ");
+      Serial.println(buffer->queue_index);
+
+      Serial.println(F("Failed to send!"));
+    } else {
+      buffer->data[buffer->queue_index].value = NULL;
+      Serial.println(F("Succesfully sent!"));
+    }
+  }
+}

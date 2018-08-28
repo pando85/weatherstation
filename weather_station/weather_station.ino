@@ -40,6 +40,7 @@ void setup() {
   publisher.humidity = get_mqtt_publisher(th_sensor_data.humidity.topic);
 }
 
+
 void loop() {
   mqtt_connect();
 
@@ -52,26 +53,6 @@ void loop() {
   }
 
   Serial.println("\nSending weather-station values");
-  bool is_success = true;
-  while (is_success == true && th_sensor_data.temperature.data[th_sensor_data.temperature.queue_index].value != NULL){
-    char data_json[40];
-    strcpy(data_json, get_json_from_data(th_sensor_data.temperature.data[th_sensor_data.temperature.queue_index]));
-
-    if (! publisher.temperature->publish(data_json)) {
-      th_sensor_data.temperature.queue_index += 1;
-      if (th_sensor_data.temperature.queue_index >= QUEUES_SIZE){
-        th_sensor_data.temperature.queue_index = 0;
-      }
-      is_success = false;
-      Serial.print("Buffer index: ");
-      Serial.println(th_sensor_data.temperature.queue_index);
-
-      Serial.println(F("Failed to send!"));
-    } else {
-      th_sensor_data.temperature.data[th_sensor_data.temperature.queue_index].value = NULL;
-      Serial.println(F("Succesfully sent!"));
-    }
-  }
-
+  publish_all(&th_sensor_data, &publisher);
   delay(2000);
 }
