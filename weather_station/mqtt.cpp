@@ -14,56 +14,64 @@ Adafruit_MQTT_Publish* get_mqtt_publisher(const char* topic){
     return publisher;
 }
 
-void mqtt_connect(void) {
+bool mqtt_connect(void) {
   int8_t ret;
 
-  // Stop if already connected.
   if (mqtt.connected()) {
-    return;
+    return true;
   }
 
   Serial.print("Connecting to MQTT... ");
 
-  uint8_t retries = 3;
-  while ((ret = mqtt.connect()) != IS_CONNECTED) {
+  if (mqtt.connect() != IS_CONNECTED){
+    Serial.println("Retrying MQTT connection in 2 seconds...");
     Serial.println(mqtt.connectErrorString(ret));
-    Serial.println("Retrying MQTT connection in 5 seconds...");
     mqtt.disconnect();
-    delay(5000);
-    retries--;
-    if (retries == 0) {
-      exit (1);
-    }
+    return false;
   }
   Serial.println("MQTT Connected!");
+  return true;
 }
 
 
 extern void publish_all(_th_sensor_data* th_sensor_data, mqtt_th_sensor_publisher* th_sensor_publisher){
+  Serial.println("\nSending weather-station values");
   publish_data(&(th_sensor_data->temperature), th_sensor_publisher->temperature);
   publish_data(&(th_sensor_data->humidity), th_sensor_publisher->humidity);
 }
 
 
 void publish_data(buffer* buffer, Adafruit_MQTT_Publish* publisher){
-  bool is_success = true;
-  while (is_success == true && buffer->data[buffer->queue_index].value != NULL){
+  while (true){
     char data_json[40];
     strcpy(data_json, get_json_from_data(buffer->data[buffer->queue_index]));
 
-    if (! publisher->publish(data_json)) {
+    Serial.print("Buffer index: ");
+    Serial.println(buffer->queue_index);
+    if (!publisher->publish(data_json)) {
       buffer->queue_index += 1;
       if (buffer->queue_index >= QUEUES_SIZE){
         buffer->queue_index = 0;
       }
-      is_success = false;
-      Serial.print("Buffer index: ");
-      Serial.println(buffer->queue_index);
-
       Serial.println(F("Failed to send!"));
-    } else {
-      buffer->data[buffer->queue_index].value = NULL;
-      Serial.println(F("Succesfully sent!"));
+      break;
+    }
+
+    buffer->queue_index -= 1;
+    if (buffer->queue_index < 0){
+      buffer->queue_index = 0;
+      break;
     }
   }
+
 }
+
+// enviar hasta fallar o mandar todos los datos
+// si se envia
+// enviar siguiente dato POP
+// si no se envia
+// a coger más datos -> cuando read hacer dato PUSH
+
+// mejor que FIFO un buffer con un mecanismo de interpolacion por timestamp para
+// perder la menos informacion posible de la muestra
+// tiene que saber la longitud, el inicio y el final

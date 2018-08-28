@@ -30,12 +30,12 @@ namespace th_sensor
       return false;
     }
 
-    Serial.print("Humidity: ");
-    Serial.print(th_sensor_data->humidity.data[th_sensor_data->humidity.queue_index].value);
-    Serial.print(" %\t");
     Serial.print("Temperature: ");
     Serial.print(th_sensor_data->temperature.data[th_sensor_data->temperature.queue_index].value);
     Serial.print(" *C\t");
+    Serial.print("Humidity: ");
+    Serial.print(th_sensor_data->humidity.data[th_sensor_data->humidity.queue_index].value);
+    Serial.print(" %\t");
     Serial.print("timestamp: ");
     Serial.println(th_sensor_data->temperature.data[th_sensor_data->temperature.queue_index].timestamp);
     Serial.println();

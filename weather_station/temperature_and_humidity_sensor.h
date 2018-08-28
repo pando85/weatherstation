@@ -2,6 +2,8 @@
 #ifndef TEMPERATURE_AND_HUMIDITY_SENSOR_H
 #define TEMPERATURE_AND_HUMIDITY_SENSOR_H
 
+#define MIN_SENSOR_READ_TIME 2000
+
 #include <DHT.h>
 
 #include "configuration.h"

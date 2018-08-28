@@ -52,7 +52,6 @@ void loop() {
     return;
   }
 
-  Serial.println("\nSending weather-station values");
   publish_all(&th_sensor_data, &publisher);
-  delay(2000);
+  delay(MIN_SENSOR_READ_TIME);
 }
