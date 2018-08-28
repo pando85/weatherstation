@@ -49,9 +49,11 @@ void publish_data(buffer* buffer, Adafruit_MQTT_Publish* publisher){
     Serial.print("Buffer index: ");
     Serial.println(buffer->queue_index);
     if (!publisher->publish(data_json)) {
-      buffer->queue_index += 1;
-      if (buffer->queue_index >= QUEUES_SIZE){
-        buffer->queue_index = 0;
+      if (buffer->queue_index + 1 >= QUEUES_SIZE){
+        buffer->queue_index = QUEUES_SIZE - 1;
+      }
+      else{
+        buffer->queue_index += 1;
       }
       Serial.println(F("Failed to send!"));
       break;
