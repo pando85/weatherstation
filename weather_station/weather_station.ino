@@ -47,30 +47,11 @@ void loop() {
 
   unsigned long timestamp = timeClient.getEpochTime();
 
-  th_sensor_data.humidity.data[th_sensor_data.humidity.queue_index].timestamp = timestamp;
-  th_sensor_data.humidity.data[th_sensor_data.humidity.queue_index].value = th_sensor::dht.readHumidity();
-  th_sensor_data.temperature.data[th_sensor_data.temperature.queue_index].timestamp = timestamp;
-  th_sensor_data.temperature.data[th_sensor_data.temperature.queue_index].value = th_sensor::dht.readTemperature();
-
-  if (isnan(th_sensor_data.humidity.data[th_sensor_data.humidity.queue_index].value) || isnan(th_sensor_data.temperature.data[th_sensor_data.temperature.queue_index].value)) {
-    Serial.println("Failed to read from DHT sensor!");
+  if (! th_sensor::get_data(&th_sensor_data, timestamp)){
     return;
   }
 
-  //float hic = th_sensor::dht.computeHeatIndex(t, h, false);
-
-  Serial.print("Humidity: ");
-  Serial.print(th_sensor_data.humidity.data[th_sensor_data.humidity.queue_index].value);
-  Serial.print(" %\t");
-  Serial.print("Temperature: ");
-  Serial.print(th_sensor_data.temperature.data[th_sensor_data.temperature.queue_index].value);
-  Serial.print(" *C\t");
-  Serial.print("timestamp: ");
-  Serial.println(th_sensor_data.temperature.data[th_sensor_data.temperature.queue_index].timestamp);
-  Serial.println();
-
   Serial.println("\nSending weather-station values");
-
   bool is_success = true;
   while (is_success == true && th_sensor_data.temperature.data[th_sensor_data.temperature.queue_index].value != NULL){
     char data_json[40];
